@@ -32,9 +32,19 @@ ctest --test-dir build --output-on-failure
 ./build/apadana
 ```
 
-Apadana currently requires CMake 3.20 or newer, a C++17 compiler, and the
-wide-character ncurses development package (`libncurses-dev` on Debian-based
-systems, `ncurses` on Arch Linux).
+Apadana requires CMake 3.20 or newer and a C++17 compiler. The terminal
+frontend additionally requires the wide-character ncurses development package
+(`libncurses-dev` on Debian-based systems, `ncurses` on Arch Linux).
+
+The application is organized as a shared `apadana_core` library with separate
+terminal and graphical frontends. The terminal executable remains
+`./build/apadana` (CMake target `apadana_cli`). To include the GTK3 frontend,
+install GTK3 development files (`libgtk-3-dev` on Debian-based systems) and
+build the `apadana-gtk` target; when GTK3 is missing, CMake skips that target
+and still builds the terminal application. Configure with
+`-DAPADANA_BUILD_GTK_GUI=OFF` to disable GTK discovery explicitly.
+To build only the graphical frontend, configure with
+`-DAPADANA_BUILD_CLI=OFF`; this avoids the ncurses dependency as well.
 
 User-management backends are selected by capability: shadow-utils on Linux or
 `pw` on FreeBSD. Unsupported systems retain read-only account browsing.
